@@ -1,0 +1,10 @@
+resources:
+  - skyramp-worker-deployment.yaml
+  - skyramp-worker-configmap.yaml
+  - skyramp-worker-files-configmap.yaml
+  - skyramp-worker-service.yaml
+  - skyramp-worker-serviceaccount.yaml
+  - skyramp-worker-rolebinding.yaml
+  - skyramp-worker-role.yaml
+  - skyramp-worker-clusterrolebinding.yaml
+  - skyramp-worker-clusterrole.yaml
