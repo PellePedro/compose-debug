@@ -102,12 +102,13 @@ cat <<EOT > /home/workspace/dashboard.code-workspace
 	"settings": {}
 }
 EOT
-cd /home/workspace/dashboard/frontend
+pushd /home/workspace/dashboard/frontend
 npm install
 npm run build
-cd /home/workspace/dashboard/backend
+popd
+pushd /home/workspace/dashboard/backend
+npm install --save-dev typescript ts-node
 npm install
-npm run build
 EOF
     echo "Debug worker started on http://localhost:6001/?folder=/home/workspace/skyramp"
     echo "Debug worker started on http://localhost:8001/?workspace=/home/workspace/dashboard/dashboard.code-workspace"
