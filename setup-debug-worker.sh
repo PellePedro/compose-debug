@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 
+source moby/.env
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 SKYRAMP_DEV_WORKER=skyramp-dev-worker:latest
 NS=worker
 DEBUG_PORT=8001
 CLUSTER_NAME=skyramp-debug
-SKYRAMP_GIT_ROOT=/home/workspace/skyramp
-DASHBOARD_GIT_ROOT=/home/workspace/web-server
 PID_FILE="/tmp/kubectl_port_forward.pid"
 
 compose_dir=$SCRIPT_DIR/moby
@@ -63,9 +62,8 @@ function debug_kind_worker {
 }
 
 function debug_compose_worker {
-    DEBUG_PORT=6001
     if [[ $(uname -s) == "Darwin" ]]; then
-        open "http://localhost:8001/?workspace=/home/workspace/dashboard/dashboard.code-workspace"
+        open "http://localhost:8001/?workspace=/utils/workspaces/dashboard.code-workspace"
     fi
 }
 
@@ -76,42 +74,18 @@ function compose_up_debug_worker {
     pushd $compose_dir
     docker compose up -d --wait
     docker compose exec -T worker /bin/bash <<EOF
-git config --global --add safe.directory ${SKYRAMP_GIT_ROOT}
-git config --global --add safe.directory ${DASHBOARD_GIT_ROOT}
-pushd ${SKYRAMP_GIT_ROOT}
+git config --global --add safe.directory ${SKYRAMP_CONTAINER_PATH}
+git config --global --add safe.directory ${DASHBOARD_CONTAINER_PATH}
+pushd ${SKYRAMP_CONTAINER_PATH}
 rm -f /usr/local/lib/skyramp/idl/grpc/skyramp*.*
 rm -rf /etc/skyramp/runtime/*
-cp ${SKYRAMP_GIT_ROOT}/scripts/skyramp-init.py /
-ln -s ${SKYRAMP_GIT_ROOT}/web/templates /home/workspace/skyramp/tmpl
+cp ${SKYRAMP_CONTAINER_PATH}/scripts/skyramp-init.py /
+ln -s ${SKYRAMP_CONTAINER_PATH}/web/templates /home/workspace/skyramp/tmpl
 go run ./cmd/airgap
 go mod download
 popd
-cat <<EOT > /home/workspace/dashboard.code-workspace
-{
-	"folders": [
-		{
-			"path": "/dashboard/frontend"
-		},
-		{
-			"path": "/dashboard/backend"
-		},
-		{
-			"path": "skyramp"
-		}
-	],
-	"settings": {}
-}
-EOT
-pushd /home/workspace/dashboard/frontend
-npm install
-npm run build
-popd
-pushd /home/workspace/dashboard/backend
-npm install --save-dev typescript ts-node
-npm install
 EOF
-    echo "Debug worker started on http://localhost:6001/?folder=/home/workspace/skyramp"
-    echo "Debug worker started on http://localhost:8001/?workspace=/home/workspace/dashboard/dashboard.code-workspace"
+    echo "Debug worker started on http://localhost:8001/?workspace=/utils/workspaces/dashboard.code-workspace"
 }
 
 function compose_down_debug_worker {
@@ -172,12 +146,12 @@ function deploy_worker() {
   kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=skyramp-worker,app.kubernetes.io/instance=dev -n ${NS} --timeout=300s
   POD_NAME=$(kubectl get pods -l app.kubernetes.io/name=skyramp-worker -n worker -o jsonpath="{.items[0].metadata.name}")
   kubectl exec -it $POD_NAME -n worker -- /bin/bash <<EOF
-pushd ${SKYRAMP_GIT_ROOT}
-git config --global --add safe.directory ${SKYRAMP_GIT_ROOT}
+pushd ${SKYRAMP_PATH}
+git config --global --add safe.directory ${SKYRAMP_PATH}
 rm -f /usr/local/lib/skyramp/idl/grpc/skyramp*.*
 rm -rf /etc/skyramp/runtime/*
-cp ${SKYRAMP_GIT_ROOT}/scripts/skyramp-init.py /
-ln -s ${SKYRAMP_GIT_ROOT}/web/templates /home/workspace/skyramp/tmpl
+cp ${SKYRAMP_PATH}/scripts/skyramp-init.py /
+ln -s ${SKYRAMP_PATH}/web/templates /home/workspace/skyramp/tmpl
 go run ./cmd/airgap
 go mod download
 EOF

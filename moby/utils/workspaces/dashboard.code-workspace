@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "/home/workspace/dashboard/frontend"
+		},
+		{
+			"path": "/home/workspace/dashboard/backend"
+		},
+		{
+			"path": "/home/workspace/skyramp"
+		},
+		{
+			"path": "/utils/proxy"
+		}
+	],
+	"settings": {}
+}
+
