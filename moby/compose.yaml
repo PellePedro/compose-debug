@@ -28,29 +28,7 @@ services:
           - dashboard-server
           - dashboard-client
           - worker
-  worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: skyramp-dev-worker:latest
-    ports:
-      - 45555:35142
-      - 6001:6001
-    volumes:
-      - ./scripts:/scripts
-      - ${SKYRAMP_PATH}:/home/workspace/skyramp
-      - ${HOME}/go/pkg:/root/go/pkg
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - dev_network
-  opentsdb:
-    image: petergrace/opentsdb-docker:latest
-    ports:
-      - "4242:4242"
-    networks:
-      - dev_network
-
-  mongodb:
+  mongo:
     image: mongo:6.0.6
     container_name : mongo-datastore-svc
     ports:
