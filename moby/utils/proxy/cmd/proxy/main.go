@@ -15,7 +15,7 @@ var (
 	backendURLStr = "http://localhost:4000"                    // Backend server URL
 )
 
-func init(){
+func init() {
 	staticDir = os.Getenv("STATIC_DIR")
 	if staticDir == "" {
 		staticDir = "/home/workspace/dashboard/frontend/build"
@@ -63,7 +63,7 @@ func main() {
 		staticFilePath := filepath.Join(staticDir, cleanPath)
 
 		// If the path is "/" serve index.html
-		if r.URL.Path == "/" {
+		if r.URL.Path == "/" || r.URL.Path == "/tests" {
 			serveStaticFile(w, r, "index.html")
 			return
 		}

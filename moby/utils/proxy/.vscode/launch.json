@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Proxy",
+            "name": "Run Dashboard LB",
             "type": "go",
             "request": "launch",
             "mode": "auto",

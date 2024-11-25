@@ -4,12 +4,15 @@
 			"path": "/home/workspace/dashboard/frontend"
 		},
 		{
+			"name": "Dashboard Backend",
 			"path": "/home/workspace/dashboard/backend"
 		},
 		{
+			"name": "Skyramp Worker",
 			"path": "/home/workspace/skyramp"
 		},
 		{
+			"name": "Dashboard LB",
 			"path": "/utils/proxy"
 		}
 	],
