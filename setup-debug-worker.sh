@@ -116,7 +116,7 @@ EOF
   kubectl create ns ${NS}
 }
 
-function build_devcontainer() {
+function build_debugcontainer() {
   # build debug image
   pushd ${compose_dir}
   docker compose build
@@ -160,21 +160,21 @@ EOF
 
 # Define two parallel arrays
 descriptions=(
+    "0.0 Build debug container"
     "2.0 Docker compose up"
     "2.2 Docker compose down"
     "2.1 Debug worker in compose"
     "1.1 Create kind cluster"
-    "1.2 Build devcontainer"
-    "1.3 Deploy devcontainer to kind cluster"
+    "1.3 Deploy debug container to kind cluster"
     "1.4 Debug worker in k8s"
 )
 
 actions=(
+    "build_debugcontainer"
     "compose_up_debug_worker"
     "compose_down_debug_worker"
     "debug_compose_worker"
     "create_cluster"
-    "build_devcontainer"
     "deploy_worker"
     "debug_kind_worker"
 )
